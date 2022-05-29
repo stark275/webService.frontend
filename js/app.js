@@ -4,26 +4,16 @@ var employees = get(uri('/employe'));
 
 console.log(employees.responseJSON);
 
-fillTable(employees)
+fillTable(employees);
+
+fillModals(employees);
+
+removeEmployee() 
 
 // fillTable(employees)
 
 //removeRows()
 
-// var param = JSON.stringify({
-//     nom: 'Stark',
-//     email: 'How@lolo.com',
-//     adresse: 'Howard street',
-//     phone: '46469649649',
-// });
-
-
-// var Addemployee = $.post(
-//     uri('/employe'),
-//     param   
-// );
-
-// console.log(Addemployee.responseJSON);
 
 $(document).ready(function () {
     $("#newEmp").submit(function (event) {
@@ -40,15 +30,45 @@ $(document).ready(function () {
         formData   
     );
 
-        console.log(Addemployee);
-        console.log("SUBMIT");
+      console.log(Addemployee.responseJSON);
 
-  
       event.preventDefault();
       window.location.reload();
     });
 
-    console.log("READY!!");
+
+ });
+
+ $(document).ready(function () {
+    $(".updateEmp").submit(function (event) {
+
+     let id = $(this).attr("data-id");
+
+      let formData = JSON.stringify({
+        nom: $(this).find('input[class*="updateName"]').val(),
+        email: $(this).find('input[class*="updateEmail"]').val(),
+        adresse:  $(this).find('input[class*="updateAdress"]').val(),
+        phone: $(this).find('input[class*="updatePhone"]').val(),
+        id : id
+     });
+     
+
+     let url = '/employe/'+id;
+         url = uri(url)
+  
+
+    let Addemployee = $.ajax({
+        type: 'PUT',
+        url : url,
+        data : formData
+    });
+    
+      console.log(Addemployee.responseJSON);
+
+      event.preventDefault();
+      window.location.reload();
+    });
+
 
  });
 
