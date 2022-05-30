@@ -85,8 +85,9 @@ function removeEmployee() {
     $('.delete').on('click',function (e) {
 
         let id = $(this).attr("data-id");
-        let url = '/'+id;
-            url = uri(url)
+        let url = '/employe/'+id;
+            url = uri(url);
+
         console.log("delete :"+ id);
 
         var formData = JSON.stringify({
@@ -102,7 +103,7 @@ function removeEmployee() {
           console.log(Addemployee.responseJSON);
     
           e.preventDefault();
-        //   window.location.reload();
+         window.location.reload();
     })
 }
 
