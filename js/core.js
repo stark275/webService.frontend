@@ -1,3 +1,8 @@
+/**
+ * Definition des fonction et configution
+ */
+
+// Configuration de base du clien HTTP
 jQuery.ajaxSetup({
     async:false,
     headers: {
@@ -6,29 +11,25 @@ jQuery.ajaxSetup({
     }
 });
 
+// Permet de construire dynamiquement le point d'entré (l'url)
 var uri = function (route) {
     return "http://127.0.0.1:8087/api"+route
 }
 
-
+//permet de Recevoir les données au format JSON depuis l'API
 function get(uri, params = {}) {
 
     var jqxhr = $.get( uri, function() {
-
-
         console.log("[REQUEST DONE]");
 
       }).done(function(data) {
-
-        
-        console.log("[REQUEST SUCCESS");
       
+        console.log("[REQUEST SUCCESS"); 
           
       }).fail(function() {
 
         console.log("[REQUEST ERROR]");
         
-
       }).always(function() {
 
           console.log("[REQUEST ENDS]");
@@ -36,6 +37,8 @@ function get(uri, params = {}) {
 
     return jqxhr;
 }
+
+//permet d'envoyer les données au format JSON vers l'API
 
 function post(uri, params) {
     console.log(uri, params);
@@ -46,7 +49,7 @@ function post(uri, params) {
 }
 
 
-
+// Affiche les données reçues dans un tableau html
 function fillTable(employees){
     var rows = '';
     $.each(employees.responseJSON.response, function(i, item) { 
@@ -80,6 +83,70 @@ function removeRows() {
     $('.emp-row').remove();
 }
 
+// Met à jour les données de l'employé
+function updateEployee() {
+    $(document).ready(function () {
+        $(".updateEmp").submit(function (event) {
+    
+         let id = $(this).attr("data-id");
+    
+          let formData = JSON.stringify({
+            nom: $(this).find('input[class*="updateName"]').val(),
+            email: $(this).find('input[class*="updateEmail"]').val(),
+            adresse:  $(this).find('input[class*="updateAdress"]').val(),
+            phone: $(this).find('input[class*="updatePhone"]').val(),
+            id : id
+         });
+         
+    
+         let url = '/employe/'+id;
+             url = uri(url)
+      
+    
+        let Addemployee = $.ajax({
+            type: 'PUT',
+            url : url,
+            data : formData
+        });
+    
+        //   console.log(Addemployee.responseJSON);
+    
+          event.preventDefault();
+          window.location.reload();
+        });
+    
+    
+     });
+}
+
+// Crée un employé
+function createEployee() {
+    $(document).ready(function () {
+        $("#newEmp").submit(function (event) {
+    
+          var formData = JSON.stringify({
+            nom: $("#newName").val(),
+            email: $("#newEmail").val(),
+            adresse: $("#newAdress").val(),
+            phone: $("#newPhone").val(),
+         });
+      
+        let Addemployee = $.post(
+            uri('/employe'),
+            formData   
+        );
+    
+        //   console.log(Addemployee.responseJSON);
+    
+          event.preventDefault();
+          window.location.reload();
+        });
+    
+    
+     });
+}
+
+// Supprime un employé
 
 function removeEmployee() {
     $('.delete').on('click',function (e) {
@@ -107,6 +174,8 @@ function removeEmployee() {
     })
 }
 
+
+// Remplit les informations de l'employé dans une fenetre modale
 function fillModals(employees){
     var rows = '';
     $.each(employees.responseJSON.response, function(i, item) { 
@@ -147,7 +216,6 @@ function fillModals(employees){
             </div>
         </div>
         `;
-
 
         rows += row;
 
